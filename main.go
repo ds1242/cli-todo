@@ -10,7 +10,7 @@ func main() {
 	commandList := map[string]string{"add": "add", "delete": "delete", "list": "list"}
 
 	userArgs := os.Args
-	if len(userArgs) < 2 {		
+	if len(userArgs) < 3 {		
 		log.Fatal("not enough arguments")
 	}
 	
