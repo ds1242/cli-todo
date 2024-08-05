@@ -10,14 +10,21 @@ func main() {
 	commandList := map[string]string{"add": "add", "delete": "delete", "list": "list"}
 
 	userArgs := os.Args
+	if len(userArgs) < 2 {		
+		log.Fatal("not enough arguments")
+	}
 	
-	cleanArgs, errCleaningArgs := parseAndCleanArgs(userArgs[1], commandList)
-	if errCleaningArgs != nil {
-		log.Fatalf("Error parsing args: %v", errCleaningArgs)
+	if len(userArgs) > 3 {
+		log.Fatal("too many arguments")
+	}
+
+	command, errCheckCommand := checkCommand(userArgs[1], commandList)
+	if errCheckCommand != nil {
+		log.Fatalf("Error parsing args: %v", errCheckCommand)
 	}
 
 
-	fmt.Printf("Args: %v\n", cleanArgs)
+	fmt.Printf("Args: %v\n", command)
 	fmt.Printf("Command list: %v\n", commandList)
 
 }
