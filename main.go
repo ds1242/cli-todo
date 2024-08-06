@@ -29,6 +29,8 @@ func main() {
 			log.Fatalf("Error adding row: %v", addErr)
 		}
 	}
+
+	
 	fmt.Printf("Args: %v\n", command)
 	fmt.Printf("Value: %s\n", userArgs[2])
 	fmt.Printf("Type of: %T\n", userArgs[2])
