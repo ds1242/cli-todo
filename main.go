@@ -26,10 +26,19 @@ func main() {
 	if command == "add" {
 		addErr := addRow(userArgs[2])
 		if addErr != nil {
-			log.Fatalf("Error adding row: %v", addErr)
+			fmt.Printf("Error adding row: %v", addErr)
+			return
 		}
 	}
 
+	if command == "delete" {
+		message, err := deleteRecord(userArgs[2])
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+		fmt.Println(message)
+	}
 	
 	fmt.Printf("Args: %v\n", command)
 	fmt.Printf("Value: %s\n", userArgs[2])

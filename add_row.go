@@ -8,7 +8,7 @@ import (
 	"time"
 )
 
-func addRow(value string) error {
+func addRow(task string) error {
 	file, err := os.OpenFile("data.csv", os.O_APPEND|os.O_WRONLY, 0644)
 	if err != nil {
 		return errors.New("unable to open data.csv")
@@ -29,7 +29,7 @@ func addRow(value string) error {
 	createdAt := time.Now().UTC
 	completed := "false"
 
-	rowToAdd := []string{idString, value, createdAt().String(), completed }
+	rowToAdd := []string{idString, task, createdAt().String(), completed }
 	
 	writeErr := writer.Write(rowToAdd)
 	if writeErr != nil {
