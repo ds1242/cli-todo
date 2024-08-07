@@ -32,12 +32,12 @@ func main() {
 	}
 
 	if command == "delete" {
-		message, err := deleteRecord(userArgs[2])
+		err := deleteRecord(userArgs[2])
 		if err != nil {
 			fmt.Println(err)
 			return
 		}
-		fmt.Println(message)
+		fmt.Println("Record Deleted")
 	}
 	
 	fmt.Printf("Args: %v\n", command)

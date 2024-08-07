@@ -10,11 +10,11 @@ import (
 )
 
 
-func deleteRecord(recordId string)(string, error) {
+func deleteRecord(recordId string)( error) {
 	// convert input from user to get the record id as an int
 	recordIdInt, recordIdErr:= strconv.Atoi(recordId)
 	if recordIdErr != nil {
-		return "", errors.New("unable to parse record id")
+		return errors.New("unable to parse record id")
 	}
 
 	mapOfRows := make(map[int]Row)
@@ -27,7 +27,7 @@ func deleteRecord(recordId string)(string, error) {
 	}
 	
 	if len(mapOfRows) == 0 {
-		return "No row to delete", nil
+		return errors.New("no row to delete")
 	}
 
 	for _, row := range mapOfRows {
@@ -39,17 +39,17 @@ func deleteRecord(recordId string)(string, error) {
 	fmt.Println(mapOfRows)
 	deleteErr := os.Remove("data.csv")
 	if deleteErr != nil {
-		return "", errors.New("error replacing csv file")
+		return errors.New("error replacing csv file")
 	}	
 
 	_, err := os.Create("data.csv")
 	if err != nil {
-		return "", errors.New("error creating a new file")
+		return errors.New("error creating a new file")
 	}
 
 	file, err := os.OpenFile("data.csv", os.O_APPEND|os.O_WRONLY, 0644)
 	if err != nil {
-		return "", errors.New("unable to open data.csv")
+		return errors.New("unable to open data.csv")
 	}
 	
 	defer file.Close()
@@ -60,10 +60,10 @@ func deleteRecord(recordId string)(string, error) {
 		rowStringSlice := convertRowStructToSlice(row)
 		writeErr := writer.Write(rowStringSlice)
 		if writeErr != nil {
-			return "", writeErr
+			return writeErr
 		}
 	}
 	
 	
-	return "Record Deleted", nil
+	return nil
 }
