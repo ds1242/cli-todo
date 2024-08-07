@@ -23,9 +23,26 @@ func main() {
 		log.Fatalf("Error parsing args: %v", errCheckCommand)
 	}
 
+	if command == "add" {
+		addErr := addRow(userArgs[2])
+		if addErr != nil {
+			fmt.Printf("Error adding row: %v", addErr)
+			return
+		}
+	}
 
+	if command == "delete" {
+		message, err := deleteRecord(userArgs[2])
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+		fmt.Println(message)
+	}
+	
 	fmt.Printf("Args: %v\n", command)
-	fmt.Printf("Command list: %v\n", commandList)
+	fmt.Printf("Value: %s\n", userArgs[2])
+	fmt.Printf("Type of: %T\n", userArgs[2])
 
 }
 
