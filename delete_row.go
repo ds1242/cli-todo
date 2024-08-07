@@ -27,10 +27,12 @@ func deleteRecord(recordId string)(string, error) {
 	for _, row := range mapOfRows {
 		if row.ID == recordIdInt {
 			delete(mapOfRows, row.ID)
-			return "Deleted record", nil
+			// return "Deleted record", nil
 		}
 	}
 
+	
+	
 	fmt.Println(mapOfRows)
 
 	return "no record to delete", nil
