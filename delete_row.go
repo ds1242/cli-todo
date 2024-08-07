@@ -2,9 +2,10 @@ package main
 
 import (
 	// "encoding/csv"
-	"fmt"
+	// "fmt"
 	"strconv"
 	// "strings"
+	"os"
 	"errors"
 )
 
@@ -27,13 +28,27 @@ func deleteRecord(recordId string)(string, error) {
 	for _, row := range mapOfRows {
 		if row.ID == recordIdInt {
 			delete(mapOfRows, row.ID)
-			// return "Deleted record", nil
 		}
 	}
 
-	
-	
-	fmt.Println(mapOfRows)
+	deleteErr := os.Remove("data.csv")
+	if deleteErr != nil {
+		return "", errors.New("error replacing csv file")
+	}	
 
-	return "no record to delete", nil
+	file, err := os.Create("data.csv")
+	if err != nil {
+		return "", errors.New("error creating a new file")
+	}
+	file.Close()
+
+	for _, row := range mapOfRows {
+		addErr := addRow(row.Task)
+		if addErr != nil {
+			return "", errors.New("error updating the task list after deletion")
+		}
+	}
+	
+	
+	return "Record Deleted", nil
 }
