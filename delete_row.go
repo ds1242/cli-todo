@@ -1,22 +1,26 @@
 package main
 
 import (
-	"encoding/csv"
+	// "encoding/csv"
 	"fmt"
-	"strings"
+	"strconv"
+	// "strings"
 	"errors"
 )
 
 
 func deleteRecord(recordId string)(string, error) {
-	records, err := csv.NewReader(strings.NewReader("data.csv")).ReadAll()
-	if err != nil {
-		return "", errors.New("unable to delete record")
+	recordIdInt, recordIdErr:= strconv.Atoi(recordId)
+	if recordIdErr != nil {
+		return "", errors.New("unable to parse record id")
 	}
+	var recordStructSlice []Row
+	records := GetRecords("data.csv", ",")
+	fmt.Println(recordIdInt)
+	// fmt.Println(records)
 	for _, record := range records {
-		fmt.Println(record[0])
+		recordStructSlice = append(recordStructSlice, convertSliceOfRowsToRowStructs(record))
 	}
-	fmt.Println(recordId)
-	fmt.Println(records)
-	return "", nil
+	fmt.Println(recordStructSlice)
+	return "Deleted", nil
 }

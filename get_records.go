@@ -7,7 +7,7 @@ import (
 	"log"
 )
 
-
+// TODO: adjust return to add error handling
 func GetRecords(filePath, separator string) [][]string {
 	records := [][]string{}
 	if len(filePath) == 0 {
@@ -18,7 +18,7 @@ func GetRecords(filePath, separator string) [][]string {
 		log.Fatal(err)
 		return records
 	}
-	// Tightly coupled with csvReader
+	
 	csvReader := csv.NewReader(file)
 	csvReader.Comma = []rune(separator)[0]
 	for {
@@ -29,7 +29,7 @@ func GetRecords(filePath, separator string) [][]string {
 	if err == io.EOF {
 		break
 	}
-	// Processing logic can be put here
+	
 	records = append(records, columnValues)
 	}
 	return records

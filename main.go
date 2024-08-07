@@ -44,7 +44,5 @@ func main() {
 	fmt.Printf("Value: %s\n", userArgs[2])
 	fmt.Printf("Type of: %T\n", userArgs[2])
 
-	records := GetRecords("data.csv", ",")
-	fmt.Println(records)
 }
 
