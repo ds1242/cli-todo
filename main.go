@@ -20,13 +20,13 @@ func main() {
 
 	command, errCheckCommand := checkCommand(userArgs[1], commandList)
 	if errCheckCommand != nil {
-		log.Fatalf("Error parsing args: %v", errCheckCommand)
+		log.Fatalf("Error parsing args: %v\n", errCheckCommand)
 	}
 
 	if command == "add" {
 		addErr := addRow(userArgs[2])
 		if addErr != nil {
-			fmt.Printf("Error adding row: %v", addErr)
+			fmt.Printf("Error adding row: %v\n", addErr)
 			return
 		}
 	}

@@ -9,6 +9,9 @@ import (
 )
 
 func addRow(task string) error {
+	if !fileExists("data.csv") {
+		os.Create("data.csv")
+	}
 	file, err := os.OpenFile("data.csv", os.O_APPEND|os.O_WRONLY, 0644)
 	if err != nil {
 		return errors.New("unable to open data.csv")

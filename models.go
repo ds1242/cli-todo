@@ -4,6 +4,7 @@ import (
 	"log"
 	"strconv"
 	"time"
+	"os"
 )
 
 type Row struct {
@@ -61,3 +62,12 @@ func convertRowStructToSlice(record Row) []string {
 
 	return rowToAdd
 }
+
+
+func fileExists(filename string) bool {
+	info, err := os.Stat(filename)
+	if os.IsNotExist(err) {
+	   return false
+	}
+	return !info.IsDir()
+ }
