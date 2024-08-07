@@ -13,11 +13,9 @@ func deleteRecord(recordId string)(string, error) {
 	if err != nil {
 		return "", errors.New("unable to delete record")
 	}
-	// for _, record := range records {
-	// 	if record[0] == recordId {
-
-	// 	}
-	// }
+	for _, record := range records {
+		fmt.Println(record)
+	}
 	fmt.Println(recordId)
 	fmt.Println(records)
 	return "", nil
