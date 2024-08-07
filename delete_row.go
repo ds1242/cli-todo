@@ -1,12 +1,12 @@
 package main
 
 import (
-	// "encoding/csv"
-	// "fmt"
+	"encoding/csv"
+	"fmt"
 	"strconv"
 	// "strings"
-	"os"
 	"errors"
+	"os"
 )
 
 
@@ -22,30 +22,45 @@ func deleteRecord(recordId string)(string, error) {
 
 	// Load map with row objects
 	for i, record := range records {
+		// TODO: not parsing date correctly
 		mapOfRows[i] = convertSliceOfRowsToRowStructs(record)
 	}
 	
+	if len(mapOfRows) == 0 {
+		return "No row to delete", nil
+	}
+
 	for _, row := range mapOfRows {
 		if row.ID == recordIdInt {
 			delete(mapOfRows, row.ID)
 		}
 	}
 
+	fmt.Println(mapOfRows)
 	deleteErr := os.Remove("data.csv")
 	if deleteErr != nil {
 		return "", errors.New("error replacing csv file")
 	}	
 
-	file, err := os.Create("data.csv")
+	_, err := os.Create("data.csv")
 	if err != nil {
 		return "", errors.New("error creating a new file")
 	}
-	file.Close()
+
+	file, err := os.OpenFile("data.csv", os.O_APPEND|os.O_WRONLY, 0644)
+	if err != nil {
+		return "", errors.New("unable to open data.csv")
+	}
+	
+	defer file.Close()
+	writer := csv.NewWriter(file)
+	defer writer.Flush()
 
 	for _, row := range mapOfRows {
-		addErr := addRow(row.Task)
-		if addErr != nil {
-			return "", errors.New("error updating the task list after deletion")
+		rowStringSlice := convertRowStructToSlice(row)
+		writeErr := writer.Write(rowStringSlice)
+		if writeErr != nil {
+			return "", writeErr
 		}
 	}
 	
