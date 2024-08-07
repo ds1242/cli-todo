@@ -26,10 +26,10 @@ func addRow(task string) error {
 	idVal := id + 1
 	idString:= strconv.Itoa(idVal)
 
-	createdAt := time.Now().UTC
+	createdAt := time.Now().UTC()
 	completed := "false"
 
-	rowToAdd := []string{idString, task, createdAt().String(), completed }
+	rowToAdd := []string{idString, task, createdAt.String(), completed }
 	
 	writeErr := writer.Write(rowToAdd)
 	if writeErr != nil {

@@ -51,3 +51,13 @@ func convertSliceOfRowsToRowStructs(record []string) Row {
 	}
 
 }
+
+func convertRowStructToSlice(record Row) []string {
+	idString := strconv.Itoa(record.ID)
+
+	completedString := strconv.FormatBool(record.Completed)
+	
+	rowToAdd := []string{idString, record.Task, record.CreatedAt.String(), completedString}
+
+	return rowToAdd
+}
