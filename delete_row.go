@@ -1,7 +1,6 @@
 package main
 
 import (
-	"encoding/csv"
 	"strconv"
 	"errors"
 	"os"
@@ -33,23 +32,9 @@ func deleteRecord(recordId string) error {
 	if deleteErr != nil {
 		return errors.New("error replacing csv file")
 	}	
-	// create a new file 
-	_, err := os.Create("data.csv")
-	if err != nil {
-		return errors.New("error creating a new file")
-	}
-	// setup to append to file
-	file, err := os.OpenFile("data.csv", os.O_APPEND|os.O_WRONLY, 0644)
-	if err != nil {
-		return errors.New("unable to open data.csv")
-	}
 	
-	defer file.Close()
-	writer := csv.NewWriter(file)
-	defer writer.Flush()
-	// write to csv file
 	for _, slice := range updatedSlice {
-		writeErr := writer.Write(slice)
+		writeErr := writeToCSV(slice)
 		if writeErr != nil {
 			return writeErr
 		}
