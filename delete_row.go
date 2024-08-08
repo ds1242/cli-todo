@@ -1,12 +1,10 @@
 package main
 
 import (
-	// "encoding/csv"
-	"fmt"
+	"encoding/csv"
 	"strconv"
-	// "strings"
 	"errors"
-	// "os"
+	"os"
 )
 
 
@@ -16,56 +14,51 @@ func deleteRecord(recordId string) error {
 	if recordIdErr != nil {
 		return errors.New("unable to parse record id")
 	}
-	// var sliceOfRows [][]string
 	records := GetRecords("data.csv", ",")
 
-	// Load map with row objects
-	// for i, record := range records {
-	// 	// TODO: not parsing date correctly
-	// 	sliceOfRows[i] = convertSliceOfRowsToRowStructs(record)
-	// }
-	
+	// if length of records = 0 there are no records
 	if len(records) == 0 {
 		return errors.New("no row to delete")
 	}
+	// check for out of bounds index
+	if recordIdInt >= len(records) {
+		return errors.New("that record does not exists")
+	}
 
-	// for _, row := range sliceOfRows {
-	// 	if row[0] == recordIdInt {
-	// 		delete(sliceOfRows, row.ID)
-	// 	}
-	// }
+	// remove element from the slice
 	updatedSlice := RemoveElement(records, recordIdInt)
-	// deleteErr := os.Remove("data.csv")
-	// if deleteErr != nil {
-	// 	return errors.New("error replacing csv file")
-	// }	
 
-	// _, err := os.Create("data.csv")
-	// if err != nil {
-	// 	return errors.New("error creating a new file")
-	// }
-
-	// file, err := os.OpenFile("data.csv", os.O_APPEND|os.O_WRONLY, 0644)
-	// if err != nil {
-	// 	return errors.New("unable to open data.csv")
-	// }
+	// delete data file to clear it out
+	deleteErr := os.Remove("data.csv")
+	if deleteErr != nil {
+		return errors.New("error replacing csv file")
+	}	
+	// create a new file 
+	_, err := os.Create("data.csv")
+	if err != nil {
+		return errors.New("error creating a new file")
+	}
+	// setup to append to file
+	file, err := os.OpenFile("data.csv", os.O_APPEND|os.O_WRONLY, 0644)
+	if err != nil {
+		return errors.New("unable to open data.csv")
+	}
 	
-	// defer file.Close()
-	// writer := csv.NewWriter(file)
-	// defer writer.Flush()
-
-	// for _, row := range sliceOfRows {
-	// 	rowStringSlice := convertRowStructToSlice(row)
-	// 	writeErr := writer.Write(rowStringSlice)
-	// 	if writeErr != nil {
-	// 		return writeErr
-	// 	}
-	// }
-	
-	
+	defer file.Close()
+	writer := csv.NewWriter(file)
+	defer writer.Flush()
+	// write to csv file
+	for _, slice := range updatedSlice {
+		writeErr := writer.Write(slice)
+		if writeErr != nil {
+			return writeErr
+		}
+	}
+	// exit delete
 	return nil
 }
 
+// this func removes and element and shifts the rest of the elements to the right keeping the order
 func RemoveElement(s [][]string, index int) [][]string {
 	return append(s[:index], s[index+1:]...)
 }
