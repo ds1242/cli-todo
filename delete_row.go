@@ -1,69 +1,49 @@
 package main
 
 import (
-	"encoding/csv"
-	"fmt"
 	"strconv"
-	// "strings"
 	"errors"
 	"os"
 )
 
 
-func deleteRecord(recordId string)( error) {
+func deleteRecord(recordId string) error {
 	// convert input from user to get the record id as an int
 	recordIdInt, recordIdErr:= strconv.Atoi(recordId)
 	if recordIdErr != nil {
 		return errors.New("unable to parse record id")
 	}
-
-	mapOfRows := make(map[int]Row)
 	records := GetRecords("data.csv", ",")
 
-	// Load map with row objects
-	for i, record := range records {
-		// TODO: not parsing date correctly
-		mapOfRows[i] = convertSliceOfRowsToRowStructs(record)
-	}
-	
-	if len(mapOfRows) == 0 {
+	// if length of records = 0 there are no records
+	if len(records) == 0 {
 		return errors.New("no row to delete")
 	}
-
-	for _, row := range mapOfRows {
-		if row.ID == recordIdInt {
-			delete(mapOfRows, row.ID)
-		}
+	// check for out of bounds index
+	if recordIdInt >= len(records) {
+		return errors.New("that record does not exists")
 	}
 
-	fmt.Println(mapOfRows)
+	// remove element from the slice
+	updatedSlice := RemoveElement(records, recordIdInt)
+
+	// delete data file to clear it out
 	deleteErr := os.Remove("data.csv")
 	if deleteErr != nil {
 		return errors.New("error replacing csv file")
 	}	
-
-	_, err := os.Create("data.csv")
-	if err != nil {
-		return errors.New("error creating a new file")
-	}
-
-	file, err := os.OpenFile("data.csv", os.O_APPEND|os.O_WRONLY, 0644)
-	if err != nil {
-		return errors.New("unable to open data.csv")
-	}
 	
-	defer file.Close()
-	writer := csv.NewWriter(file)
-	defer writer.Flush()
-
-	for _, row := range mapOfRows {
-		rowStringSlice := convertRowStructToSlice(row)
-		writeErr := writer.Write(rowStringSlice)
+	for _, slice := range updatedSlice {
+		writeErr := writeToCSV(slice)
 		if writeErr != nil {
 			return writeErr
 		}
 	}
-	
-	
+	// exit delete
 	return nil
+}
+
+// this func removes and element and shifts the rest of the elements to the right keeping the order
+func RemoveElement(s [][]string, index int) [][]string {
+	return append(s[:index], s[index+1:]...)
 }
