@@ -10,7 +10,7 @@ func main() {
 	commandList := map[string]string{"add": "add", "delete": "delete", "list": "list"}
 
 	userArgs := os.Args
-	if len(userArgs) < 3 {		
+	if len(userArgs) < 3 && userArgs[1] != "list" {		
 		log.Fatal("not enough arguments")
 	}
 	
@@ -39,10 +39,18 @@ func main() {
 		}
 		fmt.Println("Record Deleted")
 	}
+
+	if command == "list" {
+		err := listTasks()
+		if err != nil {
+			fmt.Printf("error listing tasks: %v", err)
+			return 
+		}
+	}
 	
 	fmt.Printf("Args: %v\n", command)
-	fmt.Printf("Value: %s\n", userArgs[2])
-	fmt.Printf("Type of: %T\n", userArgs[2])
+	// fmt.Printf("Value: %s\n", userArgs[2])
+	// fmt.Printf("Type of: %T\n", userArgs[2])
 
 }
 
