@@ -7,7 +7,7 @@ import (
 )
 
 func main() {
-	commandList := map[string]string{"add": "add", "delete": "delete", "list": "list"}
+	commandList := map[string]string{"add": "add", "delete": "delete", "list": "list", "complete": "complete"}
 
 	userArgs := os.Args
 	if len(userArgs) < 3 && userArgs[1] != "list" {		
@@ -48,6 +48,16 @@ func main() {
 		}
 	}
 	
+	if command == "complete" {
+		// TODO: write complete
+		err := completeRecord(userArgs[2])
+		if err != nil {
+			log.Fatal(err)
+			return
+		}
+	}
+
+	// TODO: write help command 
 	fmt.Printf("Args: %v\n", command)
 	// fmt.Printf("Value: %s\n", userArgs[2])
 	// fmt.Printf("Type of: %T\n", userArgs[2])
