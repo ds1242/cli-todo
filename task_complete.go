@@ -2,7 +2,7 @@ package main
 
 import (
 	"errors"
-	"fmt"
+	"os"
 	"strconv"
 )
 
@@ -24,8 +24,20 @@ func completeRecord(recordId string) error {
 	if recordIdInt >= len(records) {
 		return errors.New("that record does not exists")
 	}
+	records[recordIdInt][2] = "true"
+	
+	// delete data file to clear it out
+	deleteErr := os.Remove("data.csv")
+	if deleteErr != nil {
+		return errors.New("error replacing csv file")
+	}	
 
-	fmt.Println(records)
+	for _, row := range records {
+		writeErr := writeToCSV(row)
+		if writeErr != nil {
+			return writeErr
+		}
+	}
 
 	return nil
 }
