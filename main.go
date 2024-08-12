@@ -7,10 +7,10 @@ import (
 )
 
 func main() {
-	commandList := map[string]string{"add": "add", "delete": "delete", "list": "list"}
+	commandList := map[string]string{"add": "add", "delete": "delete", "list": "list", "complete": "complete", "help":"help"}
 
 	userArgs := os.Args
-	if len(userArgs) < 3 && userArgs[1] != "list" {		
+	if len(userArgs) < 3 && (userArgs[1] != "list" && userArgs[1] != "help") {		
 		log.Fatal("not enough arguments")
 	}
 	
@@ -48,9 +48,30 @@ func main() {
 		}
 	}
 	
-	fmt.Printf("Args: %v\n", command)
-	// fmt.Printf("Value: %s\n", userArgs[2])
-	// fmt.Printf("Type of: %T\n", userArgs[2])
+	if command == "complete" {
+		err := completeRecord(userArgs[2])
+		if err != nil {
+			log.Fatal(err)
+			return
+		}
+	}
+
+	if command == "help" {
+		fmt.Print(`A todo list for the terminal
+
+Usage: 
+	tasks [commmand]
+
+Available Commands:
+	add			[task]	Add a new task
+	complete 	[id]	Mark the task complete with the provided id
+	delete		[id]	Delete the task with the provided id
+	list				List all of the tasks in the todo list
+	help				Help about any command
+
+
+	`)
+	}
 
 }
 
